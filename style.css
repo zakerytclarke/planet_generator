@@ -1,0 +1,34 @@
+html, body {
+  margin:0;
+  overflow:hidden
+}
+
+#settings{
+  position:fixed;
+  top:20px;
+  right:0px;
+  width:30vw;
+  z-index: 100;
+
+  color:#eee;
+  text-align:center;
+  vertical-align: middle;
+
+}
+
+
+#settings input {
+  vertical-align: middle;
+}
+
+#settings input[type="range"] {
+  width:60%;
+}
+
+#settings input[type="color"] {
+  width:60%;
+}
+
+#settings label{
+  vertical-align: middle;
+}
