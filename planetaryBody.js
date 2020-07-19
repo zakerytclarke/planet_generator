@@ -1,25 +1,48 @@
 function PlanetaryObject(settings){
   noiseSeed(settings.seed);
-  var sphere_geometry = new THREE.SphereGeometry(1, 128, 128);
 
   //Settings
   var noiseScale=settings.detail;//0-Infinity (Hight number = Higher Detail)
   var height=settings.height;//0-1
+  var size=settings.size;
+  console.log(settings);
+
+  var sphere_geometry = new THREE.SphereGeometry(size, 128, 128);
 
   //Set Geometry
-  console.log(sphere_geometry.vertices[0]);
   for (var i=0;i<sphere_geometry.vertices.length;i++) {
     var p=sphere_geometry.vertices[i];
-    //var normalVector=p.normal;
-    var increasedHeight=noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale)
+    var increasedHeight=1-Math.abs(noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale));
 
-    p.x+=normalVector.x*increasedHeight;
+    //p.x+=increasedHeight;
+    //p.y+=increasedHeight;
+    //p.z+=increasedHeight;
     //p.y+=normalVector.y*increasedHeight;
     //p.z+=normalVector.z*increasedHeight;
     //p.y*=noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale);
     //p.z*=noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale);
-    //p.normalize().multiplyScalar(1+height*noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale));
+
+    p.x*=1+height*increasedHeight;
+    p.y*=1+height*increasedHeight;
+    p.z*=1+height*increasedHeight;
+
+    if(noise(p.x)>0.45){
+      p.x-=p.x*0.3;
+      p.y-=p.y*0.3;
+      p.z-=p.z*0.3;
+    }
+
+
+    var vectorMagnitude=Math.sqrt(Math.pow(p.x,2)+Math.pow(p.y,2)+Math.pow(p.z,2));
+
+    //p.x/=vectorMagnitude;
+    //p.y/=vectorMagnitude;
+    //p.z/=vectorMagnitude;
+
+    // /p.normalize();
+    //p.normalize().multiplyScalar(height*noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale));
   }
+
 
   for (var i=0;i<sphere_geometry.faces.length;i++) {
     var normalVector=sphere_geometry.faces[i].normal;
@@ -34,27 +57,40 @@ function PlanetaryObject(settings){
 
   var sphere = new THREE.Mesh(sphere_geometry, material);
 
-  //Normalize all the points to look more spherical
-  for (var i=0;i<sphere.geometry.vertices.length;i++) {
-    var p=sphere.geometry.vertices[i];
-    //p.normalize();
-  }
+  sphere.geometry.computeVertexNormals();
+  sphere.geometry.normalsNeedUpdate = true;
+  sphere.geometry.verticesNeedUpdate = true;
+
+
+/*
+  var sphereBSP = new ThreeBSP( sphere)
+
+  console.log(sphereBSP);
+
+  var cubeGeometry = new THREE.CubeGeometry( 100, 100, 100, 1, 1, 1 );
+  var cubeMesh = new THREE.Mesh( cubeGeometry );
+  var cubeBSP = new ThreeBSP( cubeMesh );
+
+  var newBSP = cubeBSP.subtract( sphereBSP );
+  var planet = newBSP.toMesh(new THREE.MeshNormalMaterial());
+*/
+
 
 
 
   //Set Colors
   /*
   for (var i=0;i<sphere.geometry.faces.length;i++) {
-    sphere.geometry.faces[i].vertexColors[0]=0xff000;
-    sphere.geometry.faces[i].vertexColors[1]=0xff000;
-    sphere.geometry.faces[i].vertexColors[2]=0xff000;
-  }
-  */
+  sphere.geometry.faces[i].vertexColors[0]=0xff000;
+  sphere.geometry.faces[i].vertexColors[1]=0xff000;
+  sphere.geometry.faces[i].vertexColors[2]=0xff000;
+}
+*/
 
 
-  sphere.geometry.computeVertexNormals();
-  sphere.geometry.normalsNeedUpdate = true;
-  sphere.geometry.verticesNeedUpdate = true;
+// sphere.geometry.computeVertexNormals();
+// sphere.geometry.normalsNeedUpdate = true;
+// sphere.geometry.verticesNeedUpdate = true;
 
   return sphere;
 }
