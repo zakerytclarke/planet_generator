@@ -57,5 +57,5 @@ function getSettings(){
 
 
 function update(){
-  planet.rotation.y-=0.002;
+  //planet.rotation.y-=0.002;
 }

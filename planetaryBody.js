@@ -12,7 +12,9 @@ function PlanetaryObject(settings){
   //Set Geometry
   for (var i=0;i<sphere_geometry.vertices.length;i++) {
     var p=sphere_geometry.vertices[i];
-    var increasedHeight=1-Math.abs(noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale));
+    var increasedHeight=noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale);
+    var increasedHeight1=noise(p.x*noiseScale+10,p.y*noiseScale+10,p.z*noiseScale+10);
+    var increasedHeight2=noise(p.x*noiseScale+20,p.y*noiseScale+20,p.z*noiseScale+20);
 
     //p.x+=increasedHeight;
     //p.y+=increasedHeight;
@@ -23,14 +25,15 @@ function PlanetaryObject(settings){
     //p.z*=noise(p.x*noiseScale,p.y*noiseScale,p.z*noiseScale);
 
     p.x*=1+height*increasedHeight;
-    p.y*=1+height*increasedHeight;
-    p.z*=1+height*increasedHeight;
+    p.y*=1+height*increasedHeight1;
+    p.z*=1+height*increasedHeight2;
 
-    if(noise(p.x)>0.45){
-      p.x-=p.x*0.3;
-      p.y-=p.y*0.3;
-      p.z-=p.z*0.3;
-    }
+    //Generate Craters
+    // if(noise(p.x)>0.45){
+    //   p.x-=p.x*0.3;
+    //   p.y-=p.y*0.3;
+    //   p.z-=p.z*0.3;
+    // }
 
 
     var vectorMagnitude=Math.sqrt(Math.pow(p.x,2)+Math.pow(p.y,2)+Math.pow(p.z,2));
@@ -53,8 +56,8 @@ function PlanetaryObject(settings){
   }
 
 
-  var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors });
-
+  //var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors });
+  var material = new THREE.MeshNormalMaterial();
   var sphere = new THREE.Mesh(sphere_geometry, material);
 
   sphere.geometry.computeVertexNormals();
